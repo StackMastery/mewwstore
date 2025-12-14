@@ -11,7 +11,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Turn as Hamburger } from "hamburger-react";
-import { Button } from "./ui/button";
+import HeaderButton from "./HeaderButton";
 
 const NavData = [
   { name: "Support", link: "/support" },
@@ -23,7 +23,7 @@ const NavData = [
   { name: "Affiliate", link: "/affiliate" },
 ];
 
-function Header() {
+function Header({ session }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -48,16 +48,16 @@ function Header() {
           <nav
             className={`${
               isMobileMenuOpen
-                ? "block absolute top-[100%] bg-white w-full left-0 p-5"
+                ? "block absolute top-[100%] bg-white w-full left-0 p-5 z-[99]"
                 : "hidden"
-            } md:block`}
+            } lg:block`}
           >
-            <ul className="flex flex-col md:flex-row items-start md:items-center gap-6 font-semibold text-black/70">
+            <ul className="flex flex-col lg:flex-row items-start lg:items-center gap-6 font-semibold text-black/70">
               {NavData.map((item, index) => (
-                <li key={index} className="w-full md:w-auto">
+                <li key={index} className="w-full lg:w-auto">
                   {item.children ? (
                     <DropdownMenu>
-                      <DropdownMenuTrigger className="flex cursor-pointer items-center gap-2 w-full md:w-auto">
+                      <DropdownMenuTrigger className="flex cursor-pointer items-center gap-2 w-full lg:w-auto">
                         {item.name}
                         <ChevronDown strokeWidth={4} size={15} />
                       </DropdownMenuTrigger>
@@ -87,18 +87,16 @@ function Header() {
         </div>
 
         <div className="flex items-center gap-5">
+          <button className="p-2 rounded-full text-black/60 hover:bg-black/5 cursor-pointer sm:block hidden">
+            <Search />
+          </button>
+          <HeaderButton className={"lg:block hidden"} session={session} />
           <div className="lg:hidden">
             <Hamburger
               toggled={isMobileMenuOpen}
               toggle={setIsMobileMenuOpen}
             />
           </div>
-          <button className="p-2 rounded-full text-black/60 hover:bg-black/5 cursor-pointer">
-            <Search />
-          </button>
-          <Link href={"/"}>
-            <Button>Sign In</Button>
-          </Link>
         </div>
       </div>
     </header>

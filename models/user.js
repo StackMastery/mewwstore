@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema(
     },
     phoneNumber: {
       type: String,
-      unique: true,
     },
     email: {
       type: String,
@@ -20,7 +19,7 @@ const userSchema = new mongoose.Schema(
       enum: ["active", "inactive", "banned"],
       default: "active",
     },
-    ipAddress: {
+    ipAddresses: {
       type: [String],
       default: [],
     },
