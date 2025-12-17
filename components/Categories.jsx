@@ -1,51 +1,73 @@
-import React from "react";
-import { ShoppingBag, Film, Wrench, Pencil, Accessibility } from "lucide-react";
+"use client";
+
+import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import clsx from "clsx";
 
-function Categories() {
-  const categoriesTools = [
-    {
-      name: "Shopping",
-      icon: ShoppingBag,
-      link: "/",
-    },
-    {
-      name: "Entertainment",
-      icon: Film,
-      link: "/",
-    },
-    {
-      name: "Tools",
-      icon: Wrench,
-      link: "/",
-    },
-    {
-      name: "Art & Design",
-      icon: Pencil,
-      link: "/",
-    },
-    {
-      name: "Accessibility",
-      icon: Accessibility,
-      link: "/",
-    },
-  ];
+function Categories({ data }) {
+  const sliderRef = useRef(null);
+  const [showLeft, setShowLeft] = useState(false);
+  const [showRight, setShowRight] = useState(false);
+
+  const checkOverflow = () => {
+    const el = sliderRef.current;
+    if (!el) return;
+
+    setShowLeft(el.scrollLeft > 0);
+    setShowRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 5);
+  };
+
+  useEffect(() => {
+    checkOverflow();
+    window.addEventListener("resize", checkOverflow);
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, []);
+
+  const scroll = (direction) => {
+    sliderRef.current.scrollBy({
+      left: direction === "left" ? -300 : 300,
+      behavior: "smooth",
+    });
+  };
 
   return (
-    <section className="w-full flex justify-center p-5">
-      <div className="w-full max-w-[1440px]">
-        <div>
-          <h2 className="text-3xl font-bold mb-6 ">
-            <span className="font-semibold text-sky-500">Top </span>
-            Categories
-          </h2>
-        </div>
+    <section className="w-full flex justify-center p-5 pt-20">
+      <div className="w-full max-w-[1440px] relative">
+        <h2 className="text-3xl font-bold mb-6">
+          <span className="text-sky-500">Top </span>Categories
+        </h2>
 
-        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 mask-fade-x">
-          {categoriesTools.map((cat, index) => (
-            <CategoryCard key={index} {...cat} />
-          ))}
+        <div className="flex  items-center relative">
+          {showLeft && (
+            <button
+              onClick={() => scroll("left")}
+              className="absolute -left-2 top-1/2 -translate-y-1/2 z-20 bg-white shadow rounded-full p-2"
+            >
+              <ChevronLeft />
+            </button>
+          )}
+
+          <div
+            ref={sliderRef}
+            onScroll={checkOverflow}
+            className="flex gap-4 overflow-x-auto w-full scrollbar-hide mask-fade-x "
+          >
+            {data.map((cat, index) => (
+              <CategoryCard key={index} {...cat} />
+            ))}
+          </div>
+
+          {/* Right Arrow */}
+          {showRight && (
+            <button
+              onClick={() => scroll("right")}
+              className="absolute -right-2 top-1/2 -translate-y-1/2 z-20 bg-white shadow rounded-full p-2"
+            >
+              <ChevronRight />
+            </button>
+          )}
         </div>
       </div>
     </section>
@@ -54,45 +76,30 @@ function Categories() {
 
 export default Categories;
 
-function CategoryCard({ name, icon: Icon, bg, iconBg, link }) {
+function CategoryCard({ name, slug, icon }) {
   return (
     <Link
-      href={link || "#"}
-      className={`
-        flex items-center justify-between
-        rounded-2xl 
-
-        /* spacing */
-        px-4 py-3 sm:px-5 sm:py-3 md:px-6 md:py-4
-
-        /* width */
-        min-w-[180px] sm:min-w-[200px] md:min-w-[230px]
-
-        border  
-        /* text */
-        text-black
-      `}
+      href={`/category/${slug || "all"}`}
+      className={clsx(
+        "shrink-0",
+        "min-w-[160px] sm:min-w-[200px] md:min-w-[240px]",
+        "flex items-center justify-between",
+        "rounded-2xl border p-4 md:p-5 gap-4 bg-white transition"
+      )}
     >
-      <span
-        className="
-          font-semibold
-          text-sm sm:text-base md:text-lg
-          truncate
-        "
-      >
+      <span className="font-semibold text-sm sm:text-base md:text-lg">
         {name}
       </span>
 
-      <div
-        className={`
-          rounded-full 
-          p-2 sm:p-2.5 md:p-3
-          shrink-0
-          bg-black/5
-        `}
-      >
-        <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-black" />
-      </div>
+      {icon?.asset?.url && (
+        <Image
+          src={icon.asset.url}
+          alt={name}
+          width={40}
+          height={40}
+          className="saturate-0"
+        />
+      )}
     </Link>
   );
 }

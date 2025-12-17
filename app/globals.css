@@ -140,3 +140,20 @@ button {
   -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
   mask-image: linear-gradient(to right, black 90%, transparent 100%);
 }
+
+.imS {
+  width: 300px; /* image width */
+  height: 200px; /* image height */
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 37%, #e5e7eb 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}

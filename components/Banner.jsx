@@ -5,30 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
-function Banner() {
-  const sliderData = [
-    {
-      label: "Trending",
-      title: "Unlimited AI Image + Video Make Korun",
-      img: "/Hero.avif",
-      link: "/hellow",
-    },
-    {
-      label: "New",
-      title: "Create Stunning AI Videos Instantly",
-      img: "/Hero2.png",
-    },
-    {
-      label: "Popular",
-      title: "Advanced AI Tools in One Place",
-      img: "/Hero3.png",
-    },
-    {
-      label: "Featured",
-      title: "Boost Your Creativity With AI",
-      img: "/Hero4.png",
-    },
-  ];
+function Banner({ data }) {
+  const sliderData = [...data];
 
   const [activeIndex, setActiveIndex] = useState(0);
   useEffect(() => {
@@ -63,7 +41,7 @@ function Banner() {
                 src={slide.img}
                 alt={slide.title}
                 fill
-                className="object-cover"
+                className="object-cover imS"
                 placeholder={slide?.blur ? "blur" : "empty"}
                 blurDataURL={slide?.blur}
               />
